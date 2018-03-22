@@ -42,10 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Utils\Collections\CustomList.cs" />
-    <Compile Include="Utils\Collections\LinkedListBase.cs" />
-    <Compile Include="Utils\Collections\Node.cs" />
-    <Compile Include="Utils\Collections\Queue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shop.cs" />
