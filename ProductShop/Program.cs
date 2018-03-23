@@ -1,6 +1,8 @@
 ﻿using System;
 using Utils;
 using System.Threading;
+using ProductShop.Actors;
+using System.Threading.Tasks;
 
 namespace ProductShop
 {
@@ -20,14 +22,16 @@ namespace ProductShop
             Console.WriteLine("Press ENTER to start");
             Console.ReadLine();
 
-            DoWork(100, 1000);
+            DoWork(200, 1000);
 
             //stop
             Console.WriteLine("Pres ENTER to stop");
             Console.ReadLine();
             _isWorking.Set();
+            Console.WriteLine("Please wait...");
 
             _shop.WorkCompleted.WaitOne(-1);
+            Console.WriteLine($"Visitors: {_shop.Visitors}");
             Console.WriteLine("Shop is closed");
         }
 
@@ -35,24 +39,25 @@ namespace ProductShop
         {
             Thread generateThread = new Thread(() =>
             {
+                Console.WriteLine("Shop opening...");
                 _shop.Open();
+                Console.WriteLine("Shop is opened");
+
                 do
                 {
-                    for (int i = 0; i < buyersCount; i++)
+                    Console.WriteLine("Buyers creating...");
+                    Parallel.For(1, buyersCount, (i) =>
                     {
-                        //create buyer
-                    }
-                    ConsoleHelper.Debug("Iteration is completed");
+                        Buyer buyer = new Buyer(_shop.Stands);
+                    });
+                    _shop.Visitors += buyersCount;
+                    Console.WriteLine("Iteration is completed");
                 }
                 while (!_isWorking.WaitOne(delay));
                 _shop.Close();
             });
-            generateThread.Start();
-        }
 
-        private static void Shop_WorkCompleted(object sender, EventArgs e)
-        {
-            ConsoleHelper.Debug("Shop is complete a work");
+            generateThread.Start();
         }
     }
 }

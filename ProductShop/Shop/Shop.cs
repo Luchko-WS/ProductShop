@@ -33,6 +33,8 @@ namespace ProductShop
             _workCompleted = new EventWaitHandle(false, EventResetMode.ManualReset);
         }
 
+        public int Visitors { get; set; }
+
         public CustomLinkedList<Stand> Stands
         {
             get
@@ -51,7 +53,6 @@ namespace ProductShop
 
         public void Open()
         {
-            ConsoleHelper.Debug("Shop is opened");
             foreach (var stand in _stands)
             {
                 stand.Open();
@@ -60,16 +61,16 @@ namespace ProductShop
 
         public void Close()
         {
-            ConsoleHelper.Debug("Shop are closing... Please wait...");
             foreach (var stand in _stands)
             {
                 stand.Close();
             }
         }
 
+        //change this method
         private void Stand_WorkCompleted(object sender, EventArgs e)
         {
-            Stand stand = sender as Stand; //????????
+            Stand stand = sender as Stand;
             if (stand != null) stand.WorkCompleted -= Stand_WorkCompleted;
 
             lock (_standsListLocker)

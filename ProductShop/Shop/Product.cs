@@ -13,7 +13,6 @@
             }
         }
 
-
         public string Name
         {
             get
@@ -22,7 +21,6 @@
             }
 
         }
-
 
         public Product(string name, double price)
         {

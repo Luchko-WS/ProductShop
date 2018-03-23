@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Utils;
 using Utils.Collections;
 
@@ -23,13 +24,17 @@ namespace ProductShop.Actors
 
         private void DoWork()
         {
-            while (true)
+            Thread sellerHelperThread = new Thread(() =>
             {
-                bool res = TryGetBuyerFromQueue(out Buyer buyer);
-                if (!_seller.IsWorkTime && !res) break;
-                if (res) buyer.DoWork();
-            }
-            EventHelper.Invoke(WorkCompleted, this);
+                while (true)
+                {
+                    bool res = TryGetBuyerFromQueue(out Buyer buyer);
+                    if (!_seller.IsWorkTime && !res) break;
+                    if (res) buyer.DoWork();
+                }
+                EventHelper.Invoke(WorkCompleted, this);
+            });
+            sellerHelperThread.Start();
         }
 
         private bool TryGetBuyerFromQueue(out Buyer buyer)
@@ -40,7 +45,7 @@ namespace ProductShop.Actors
                 buyer = _buyerQueue.Dequeue();
                 return true;
             }
-            catch (InvalidOperationException)
+            catch(InvalidOperationException)
             {
                 return false;
             }

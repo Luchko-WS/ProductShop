@@ -45,7 +45,7 @@ namespace ProductShop.Actors
                 while (true)
                 {
                     bool res = _stand.TryGetBuyerFromQueue(out Buyer buyer);                   
-                    if (!IsWorkTime && !res /*helper is done*/) break;
+                    if (!IsWorkTime && !res /*check helper has completed the work case*/) break;
                     if(res) ServeBuyer(buyer);
                 }
                 EventHelper.Invoke(WorkCompleted, this);
