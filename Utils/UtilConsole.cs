@@ -7,25 +7,31 @@ namespace Utils
         private static ConsoleColor foreColorBefore = Console.ForegroundColor;
         private static ConsoleColor backColorBefore = Console.BackgroundColor;
 
-        public static void WhiteSuccess(string descr)
+        private static void WriteInConsoleWithColor(string descr, ConsoleColor color)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(descr);
-            Console.ForegroundColor = foreColorBefore;
-        }
-
-        public static void WhiteDanger(string descr)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = color;
             Console.WriteLine(descr);
             Console.ForegroundColor = foreColorBefore;
         }
 
         public static void WhiteInfo(string descr)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(descr);
-            Console.ForegroundColor = foreColorBefore;
+            WriteInConsoleWithColor(descr, ConsoleColor.White);
+        }
+
+        public static void WhiteSuccess(string descr)
+        {
+            WriteInConsoleWithColor(descr, ConsoleColor.Green);
+        }
+
+        public static void WhiteDanger(string descr)
+        {
+            WriteInConsoleWithColor(descr, ConsoleColor.Red);
+        }
+
+        public static void WhiteTips(string descr)
+        {
+            WriteInConsoleWithColor(descr, ConsoleColor.Yellow);
         }
     }
 }

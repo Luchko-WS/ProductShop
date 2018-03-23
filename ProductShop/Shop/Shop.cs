@@ -77,7 +77,10 @@ namespace ProductShop
             {
                 int selledProductsCount = stand.GetSelledProductsCount();
 
-                Console.WriteLine($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
+                ConsoleHelper.WhiteInfo($"The statistic of stand with {stand.Product.Name}s.");
+                ConsoleHelper.WhiteSuccess($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
+                ConsoleHelper.WhiteInfo($"The stand with {stand.Product.Name}s is closed.");
+               
                 _stands.Remove(stand);
                 if (_stands.Count == 0)
                 {

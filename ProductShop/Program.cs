@@ -19,19 +19,19 @@ namespace ProductShop
             _isWorking = new EventWaitHandle(false, EventResetMode.ManualReset);
 
             //start
-            ConsoleHelper.WhiteInfo("Press ENTER to start");
+            ConsoleHelper.WhiteTips("Press ENTER to start");
             Console.ReadLine();
 
             DoWork(10, 500);
 
             //stop
-            ConsoleHelper.WhiteInfo("Pres ENTER to stop");
+            ConsoleHelper.WhiteTips("Pres ENTER to stop");
             Console.ReadLine();
             _isWorking.Set();
-            ConsoleHelper.WhiteInfo("Please wait...");
+            ConsoleHelper.WhiteTips("Please wait...");
 
             _shop.WorkCompleted.WaitOne(-1);
-            Console.WriteLine($"Visitors: {_shop.Visitors}");
+            ConsoleHelper.WhiteSuccess($"Visitors: {_shop.Visitors}");
             Console.WriteLine("Shop is closed");
         }
 

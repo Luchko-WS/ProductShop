@@ -110,6 +110,7 @@ namespace ProductShop
             lock (_sellersListLocker)
             {
                 _sellers.Remove(seller);
+                ConsoleHelper.WhiteInfo($"The seller of stand with {_product.Name}s has completed the job. {_sellers.Count} left.");
                 if (_sellers.Count == 0)
                 {
                     EventHelper.Invoke(WorkCompleted, this);
