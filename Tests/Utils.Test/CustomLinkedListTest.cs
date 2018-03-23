@@ -5,10 +5,10 @@ using System.Diagnostics;
 namespace Utils.Test
 {
     [TestClass]
-    public class CustomListTest
+    public class CustomLinkedListTest
     {
         [TestMethod]
-        public void FindMinElementInCustomList()
+        public void FindMinElementInCustomLinkedList()
         {
             CustomLinkedList<int> list = new CustomLinkedList<int>();
             list.Add(5);
@@ -40,7 +40,7 @@ namespace Utils.Test
         }
 
         [TestMethod]
-        public void RemoveElementInCustomList()
+        public void RemoveElementInCustomLinkedList()
         {
             var item1 = new TestReferenceValue() { Name = "Test1" };
             var item2 = new TestReferenceValue() { Name = "Test2" };
@@ -58,6 +58,36 @@ namespace Utils.Test
             Assert.AreEqual(expectedCount, list.Count);
             Assert.AreEqual(expectedItem1, list.First.Value);
             Assert.AreEqual(expectedItem2, list.First.NextNode.Value);
+        }
+
+        [TestMethod]
+        public void CopyOfCustomLinkedList()
+        {
+            var item1 = new TestReferenceValue() { Name = "Test1" };
+            var item2 = new TestReferenceValue() { Name = "Test2" };
+
+            CustomLinkedList<TestReferenceValue> list1 = new CustomLinkedList<TestReferenceValue>();
+            list1.Add(item1);
+            list1.Add(item2);
+
+            CustomLinkedList<TestReferenceValue> list2 = new CustomLinkedList<TestReferenceValue>();
+            foreach (var item in list1)
+            {
+                list2.Add(item);
+            }
+
+            list2.Remove(list2.First.Value);
+
+            Assert.AreEqual(item1, list1.First.Value);
+
+            foreach (var item in list1)
+            {
+                System.Console.WriteLine(item.Name);
+            }
+            foreach (var item in list2)
+            {
+                System.Console.WriteLine(item.Name);
+            }
         }
     }
 }

@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\CustomLinkedList.cs" />
-    <Compile Include="Collections\LinkedListBase.cs" />
+    <Compile Include="Collections\CustomLinkedListBase.cs" />
     <Compile Include="Collections\Node.cs" />
     <Compile Include="Collections\CustomConcurrentQueue.cs" />
     <Compile Include="EventHelper.cs" />

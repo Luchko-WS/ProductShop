@@ -48,8 +48,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomListTest.cs" />
-    <Compile Include="CustomQueueTest.cs" />
+    <Compile Include="CustomLinkedListTest.cs" />
+    <Compile Include="CustomConcurrentQueueTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

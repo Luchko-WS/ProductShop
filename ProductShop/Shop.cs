@@ -9,14 +9,7 @@ namespace ProductShop
     {
         private CustomLinkedList<Stand> _stands;
         private object _standsListLocker;
-
-        public CustomLinkedList<Stand> Stands
-        {
-            get
-            {
-                return _stands;
-            }
-        }
+        private EventWaitHandle _workCompleted;
 
         public Shop()
         {
@@ -37,6 +30,23 @@ namespace ProductShop
             _stands.Add(standWithChocolates);
 
             _standsListLocker = new object();
+            _workCompleted = new EventWaitHandle(false, EventResetMode.ManualReset);
+        }
+
+        public CustomLinkedList<Stand> Stands
+        {
+            get
+            {
+                return _stands;
+            }
+        }
+
+        public EventWaitHandle WorkCompleted
+        {
+            get
+            {
+                return _workCompleted;
+            }
         }
 
         public void Open()
@@ -67,11 +77,9 @@ namespace ProductShop
                 _stands.Remove(stand);
                 if (_stands.Count == 0)
                 {
-                    EventHelper.Invoke(WorkCompleted, this);
+                    _workCompleted.Set();
                 }
             }
         }
-
-        public event EventHandler WorkCompleted; //EventWaitHandler
     }
 }

@@ -14,7 +14,6 @@ namespace ProductShop
         {
             //init
             _shop = new Shop();
-            _shop.WorkCompleted += Shop_WorkCompleted;
             _isWorking = new EventWaitHandle(false, EventResetMode.ManualReset);
 
             //start
@@ -27,6 +26,9 @@ namespace ProductShop
             Console.WriteLine("Pres ENTER to stop");
             Console.ReadLine();
             _isWorking.Set();
+
+            _shop.WorkCompleted.WaitOne(-1);
+            Console.WriteLine("Shop is closed");
         }
 
         static void DoWork(int buyersCount, int delay)

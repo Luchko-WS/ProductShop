@@ -5,11 +5,11 @@ using Utils.Collections;
 namespace Utils.Test
 {
     [TestClass]
-    public class CustomQueueTest
+    public class CustomConcurrentQueueTest
     {
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void AddAndGetElementsInCustomQueue()
+        public void AddAndGetElementsInCustomConcurrentQueue()
         {
             CustomConcurrentQueue<int> queue = new CustomConcurrentQueue<int>();
             queue.Enqueue(5);
@@ -28,7 +28,7 @@ namespace Utils.Test
         }
 
         [TestMethod]
-        public void PeekElementFromCustomQueue()
+        public void PeekElementFromCustomConcurrentQueue()
         {
             CustomConcurrentQueue<int> queue = new CustomConcurrentQueue<int>();
             queue.Enqueue(5);
