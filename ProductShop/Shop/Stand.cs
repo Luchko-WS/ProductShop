@@ -32,6 +32,7 @@ namespace ProductShop
                 seller.WorkCompleted += Seller_WorkCompleted;
                 _sellers.Add(seller);
             }
+            ConsoleHelper.WhiteSuccess($"Sellers created: {sellersCount}");
 
             //buyers queue init
             _buyerQueue = new CustomConcurrentQueue<Buyer>();

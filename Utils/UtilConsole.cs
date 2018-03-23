@@ -4,14 +4,18 @@ namespace Utils
 {
     public static class ConsoleHelper
     {
+        private static object _locker = new object();
         private static ConsoleColor foreColorBefore = Console.ForegroundColor;
         private static ConsoleColor backColorBefore = Console.BackgroundColor;
 
         private static void WriteInConsoleWithColor(string descr, ConsoleColor color)
         {
-            Console.ForegroundColor = color;
-            Console.WriteLine(descr);
-            Console.ForegroundColor = foreColorBefore;
+            lock (_locker)
+            {
+                Console.ForegroundColor = color;
+                Console.WriteLine(descr);
+                Console.ForegroundColor = foreColorBefore;
+            }
         }
 
         public static void WhiteInfo(string descr)

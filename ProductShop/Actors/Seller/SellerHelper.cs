@@ -33,6 +33,7 @@ namespace ProductShop.Actors
                     if (res) buyer.DoWork();
                 }
                 EventHelper.Invoke(WorkCompleted, this);
+                ConsoleHelper.WhiteDanger(_buyerQueue.Count.ToString());
             });
             sellerHelperThread.Start();
         }
