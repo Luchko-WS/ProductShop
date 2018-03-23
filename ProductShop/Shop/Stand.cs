@@ -76,7 +76,7 @@ namespace ProductShop
                 buyer = _buyerQueue.Dequeue();
                 return true;
             }
-            catch(InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 return false;
             }

@@ -1,13 +1,31 @@
 ﻿using System;
-using System.Threading;
 
 namespace Utils
 {
     public static class ConsoleHelper
     {
-        public static void Debug(string descr)
+        private static ConsoleColor foreColorBefore = Console.ForegroundColor;
+        private static ConsoleColor backColorBefore = Console.BackgroundColor;
+
+        public static void WhiteSuccess(string descr)
         {
-            Console.WriteLine($"Thread id = {Thread.CurrentThread.ManagedThreadId}: {descr}");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(descr);
+            Console.ForegroundColor = foreColorBefore;
+        }
+
+        public static void WhiteDanger(string descr)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(descr);
+            Console.ForegroundColor = foreColorBefore;
+        }
+
+        public static void WhiteInfo(string descr)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(descr);
+            Console.ForegroundColor = foreColorBefore;
         }
     }
 }

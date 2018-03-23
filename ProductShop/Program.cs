@@ -1,8 +1,8 @@
 ﻿using System;
-using Utils;
 using System.Threading;
 using ProductShop.Actors;
 using System.Threading.Tasks;
+using Utils;
 
 namespace ProductShop
 {
@@ -19,16 +19,16 @@ namespace ProductShop
             _isWorking = new EventWaitHandle(false, EventResetMode.ManualReset);
 
             //start
-            Console.WriteLine("Press ENTER to start");
+            ConsoleHelper.WhiteInfo("Press ENTER to start");
             Console.ReadLine();
 
-            DoWork(200, 1000);
+            DoWork(10, 500);
 
             //stop
-            Console.WriteLine("Pres ENTER to stop");
+            ConsoleHelper.WhiteInfo("Pres ENTER to stop");
             Console.ReadLine();
             _isWorking.Set();
-            Console.WriteLine("Please wait...");
+            ConsoleHelper.WhiteInfo("Please wait...");
 
             _shop.WorkCompleted.WaitOne(-1);
             Console.WriteLine($"Visitors: {_shop.Visitors}");
@@ -46,11 +46,11 @@ namespace ProductShop
                 do
                 {
                     Console.WriteLine("Buyers creating...");
-                    Parallel.For(1, buyersCount, (i) =>
+                    Parallel.For(0, buyersCount, (i) =>
                     {
                         Buyer buyer = new Buyer(_shop.Stands);
+                        _shop.Visitors++;
                     });
-                    _shop.Visitors += buyersCount;
                     Console.WriteLine("Iteration is completed");
                 }
                 while (!_isWorking.WaitOne(delay));
