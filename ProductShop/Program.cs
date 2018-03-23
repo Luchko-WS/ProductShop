@@ -22,7 +22,7 @@ namespace ProductShop
             ConsoleHelper.WhiteTips("Press ENTER to start");
             Console.ReadLine();
 
-            DoWork(10, 500);
+            DoWork(30, 500);
 
             //stop
             ConsoleHelper.WhiteTips("Pres ENTER to stop");
@@ -53,7 +53,11 @@ namespace ProductShop
                 }
                 while (!_isWorking.WaitOne(delay));
 
-                while (_shop.ActiveVisitorsCount > 0) { }
+                while (_shop.ActiveVisitorsCount > 0)
+                {
+                    Thread.Sleep(1000);
+                    ConsoleHelper.WhiteInfo($"Active buyers: {_shop.ActiveVisitorsCount}");
+                }
                 _shop.Close();
 
                 _shop.WorkCompleted.WaitOne(-1);
