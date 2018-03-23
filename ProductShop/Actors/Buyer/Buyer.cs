@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Utils;
 using Utils.Collections;
 
 namespace ProductShop.Actors
@@ -31,6 +32,7 @@ namespace ProductShop.Actors
             {
                 DoWork();
             });
+
             buyerThread.Start();
         }
 
@@ -40,6 +42,10 @@ namespace ProductShop.Actors
             if (stand != null)
             {
                 BuyProductsFromStand(stand);
+            }
+            else
+            {
+                EventHelper.Invoke(GoHome, this);
             }
         }
 
@@ -72,5 +78,7 @@ namespace ProductShop.Actors
             _productsNumber = rnd.Next(1, 3);
             stand.TryAddBuyerToQueue(this);
         }
+
+        public event EventHandler GoHome;
     }
 }

@@ -11,6 +11,9 @@ namespace ProductShop
         private object _standsListLocker;
         private EventWaitHandle _workCompleted;
 
+        private int _activeVisitorsCount;
+        private object _visitorsLocker;
+
         public Shop()
         {
             Product iceCream = new Product("Ice Cream", 12);
@@ -30,10 +33,30 @@ namespace ProductShop
             _stands.Add(standWithChocolates);
 
             _standsListLocker = new object();
+            _visitorsLocker = new object();
             _workCompleted = new EventWaitHandle(false, EventResetMode.ManualReset);
         }
 
         public int Visitors { get; set; }
+        public double TotalProfit { get; set; }
+
+        public int ActiveVisitorsCount
+        {
+            get
+            {
+                lock (_visitorsLocker)
+                {
+                    return _activeVisitorsCount;
+                }
+            }
+            set
+            {
+                lock (_visitorsLocker)
+                {
+                    _activeVisitorsCount = value;
+                }
+            }
+        }
 
         public CustomLinkedList<Stand> Stands
         {
@@ -80,7 +103,9 @@ namespace ProductShop
                 ConsoleHelper.WhiteInfo($"The statistic of stand with {stand.Product.Name}s.");
                 ConsoleHelper.WhiteSuccess($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
                 ConsoleHelper.WhiteInfo($"The stand with {stand.Product.Name}s is closed.");
-               
+
+                TotalProfit += selledProductsCount * stand.Product.Price;
+
                 _stands.Remove(stand);
                 if (_stands.Count == 0)
                 {

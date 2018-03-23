@@ -9,7 +9,6 @@ namespace ProductShop.Actors
         private Stand _stand;
         private SellerHelper _helper;
         private bool _isWorkTime = false;
-        private bool _isHelperCompletedWork = false;
         private object _locker;
 
         public Seller(Stand stand)
@@ -43,17 +42,15 @@ namespace ProductShop.Actors
         {
             Thread sellerThread = new Thread(() =>
             {
-                while (true)
+                while (IsWorkTime)
                 {
                     bool res = _stand.TryGetBuyerFromQueue(out Buyer buyer);                   
-                    if (!IsWorkTime && !res && _isHelperCompletedWork) break;
                     if(res) ServeBuyer(buyer);
                 }
                 EventHelper.Invoke(WorkCompleted, this);
             });
 
             _helper = new SellerHelper(this);
-            _helper.WorkCompleted += _helper_WorkCompleted;
             sellerThread.Start();
         }
 
@@ -78,11 +75,6 @@ namespace ProductShop.Actors
         private void _stand_CloseStand(object sender, EventArgs e)
         {
             IsWorkTime = false;
-        }
-
-        private void _helper_WorkCompleted(object sender, EventArgs e)
-        {
-            _isHelperCompletedWork = true;
         }
 
         public event EventHandler WorkCompleted;

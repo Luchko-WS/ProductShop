@@ -22,7 +22,7 @@ namespace ProductShop
             _selledProductsCount = 0;
 
             //sellers init
-            Random rnd = new Random();
+            Random rnd = new Random(DateTime.Now.Millisecond);
             int sellersCount = rnd.Next(3, 7);
 
             _sellers = new CustomLinkedList<Seller>();

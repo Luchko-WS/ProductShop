@@ -26,14 +26,11 @@ namespace ProductShop.Actors
         {
             Thread sellerHelperThread = new Thread(() =>
             {
-                while (true)
+                while (_seller.IsWorkTime)
                 {
                     bool res = TryGetBuyerFromQueue(out Buyer buyer);
-                    if (!_seller.IsWorkTime && !res) break;
                     if (res) buyer.DoWork();
                 }
-                EventHelper.Invoke(WorkCompleted, this);
-                ConsoleHelper.WhiteDanger(_buyerQueue.Count.ToString());
             });
             sellerHelperThread.Start();
         }
@@ -55,7 +52,5 @@ namespace ProductShop.Actors
                 throw;
             }
         }
-
-        public event EventHandler WorkCompleted;
     }
 }

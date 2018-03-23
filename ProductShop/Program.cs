@@ -29,10 +29,6 @@ namespace ProductShop
             Console.ReadLine();
             _isWorking.Set();
             ConsoleHelper.WhiteTips("Please wait...");
-
-            _shop.WorkCompleted.WaitOne(-1);
-            ConsoleHelper.WhiteSuccess($"Visitors: {_shop.Visitors}");
-            Console.WriteLine("Shop is closed");
         }
 
         static void DoWork(int buyersCount, int delay)
@@ -49,15 +45,29 @@ namespace ProductShop
                     Parallel.For(0, buyersCount, (i) =>
                     {
                         Buyer buyer = new Buyer(_shop.Stands);
+                        buyer.GoHome += Buyer_GoHome;
+                        _shop.ActiveVisitorsCount++;
                         _shop.Visitors++;
                     });
                     Console.WriteLine("Iteration is completed");
                 }
                 while (!_isWorking.WaitOne(delay));
+
+                while (_shop.ActiveVisitorsCount > 0) { }
                 _shop.Close();
+
+                _shop.WorkCompleted.WaitOne(-1);
+                ConsoleHelper.WhiteSuccess($"Visitors: {_shop.Visitors}");
+                ConsoleHelper.WhiteSuccess($"Total profit: {_shop.TotalProfit}");
+                Console.WriteLine("Shop is closed");
             });
 
             generateThread.Start();
+        }
+
+        private static void Buyer_GoHome(object sender, EventArgs e)
+        {
+            _shop.ActiveVisitorsCount--;
         }
     }
 }
