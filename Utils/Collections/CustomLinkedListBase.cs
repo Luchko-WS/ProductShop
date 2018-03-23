@@ -1,58 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-namespace Utils.Collections
+﻿namespace Utils.Collections
 {
-    public class LinkedListBase<T> : IEnumerable<T>
+    public class CustomLinkedListBase<T>
     {
         protected Node<T> _head;
         protected Node<T> _tail;
         protected int _count;
 
-        public LinkedListBase()
+        public CustomLinkedListBase()
         {
             _head = null;
             _tail = null;
             _count = 0;
         }
 
-        public int Count
+        protected int GetCount()
         {
-            get
-            {
-                return _count;
-            }
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            if (_head != null)
-            {
-                Node<T> _current = _head;
-                while (_current != null)
-                {
-                    var val = _current.Value;
-                    _current = _current.NextNode;
-                    yield return val;
-                }
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public void Clear()
-        {
-            _head = null;
-            _tail = null;
-            _count = 0;
-        }
-
-        public bool IsEmpty()
-        {
-            return _count == 0;
+            return _count;
         }
 
         protected void AddToEnd(T value)

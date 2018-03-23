@@ -1,0 +1,110 @@
+﻿using System;
+using Utils;
+using Utils.Collections;
+
+namespace ProductShop
+{
+    public class Stand
+    {
+        private Product _product;
+        private CustomLinkedList<Seller> _sellers;
+        private CustomConcurrentQueue<Buyer> _buyerQueue;
+        private int _selledProductsCount;
+
+        private object _sellersListLocker;
+        private object _productCountLocker;
+
+        public Stand(Product product)
+        {
+            //product init
+            _product = product ?? throw new ArgumentNullException("Product can't be null");
+            _selledProductsCount = 0;
+
+            //sellers init
+            Random rnd = new Random();
+            int sellersCount = rnd.Next(3, 7);
+
+            _sellers = new CustomLinkedList<Seller>();
+            for(int i = 0; i < sellersCount; i++)
+            {
+                var seller = new Seller(this);
+                seller.WorkCompleted += Seller_WorkCompleted;
+                _sellers.Add(seller);
+            }
+
+            //buyers queue init
+            _buyerQueue = new CustomConcurrentQueue<Buyer>();
+
+            _sellersListLocker = new object();
+            _productCountLocker = new object();
+        }
+
+        public Product Product
+        {
+            get
+            {
+                return _product;
+            }
+        }
+
+        public void Open()
+        {
+            EventHelper.Invoke(OpenStand, this);
+        }
+
+        public void Close()
+        {
+            EventHelper.Invoke(CloseStand, this);
+        }
+
+        public void TryAddBuyerToQueue(Buyer buyer)
+        {
+            _buyerQueue.Enqueue(buyer);
+        }
+
+        public bool TryGetBuyerFromQueue(out Buyer buyer)
+        {
+            buyer = null;
+            try
+            {
+                buyer = _buyerQueue.Dequeue();
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void IncreaseProductsCount(int number)
+        {
+            lock (_productCountLocker)
+            {
+                _selledProductsCount += number;
+            }
+        }
+
+        private void Seller_WorkCompleted(object sender, EventArgs e)
+        {
+            Seller seller = sender as Seller;
+            if (seller != null) seller.WorkCompleted -= Seller_WorkCompleted;
+
+            lock (_sellersListLocker)
+            {
+                _sellers.Remove(seller);
+                if (_sellers.Count == 0)
+                {
+                    EventHelper.Invoke(WorkCompleted, this);
+                }
+            }
+        }
+
+        public event EventHandler OpenStand;
+        public event EventHandler CloseStand;
+        public event EventHandler WorkCompleted;
+    }
+}

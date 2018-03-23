@@ -40,10 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\CustomList.cs" />
+    <Compile Include="Collections\CustomLinkedList.cs" />
     <Compile Include="Collections\LinkedListBase.cs" />
     <Compile Include="Collections\Node.cs" />
-    <Compile Include="Collections\Queue.cs" />
+    <Compile Include="Collections\CustomConcurrentQueue.cs" />
+    <Compile Include="EventHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UtilConsole.cs" />
   </ItemGroup>

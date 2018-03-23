@@ -10,7 +10,7 @@ namespace Utils.Test
         [TestMethod]
         public void FindMinElementInCustomList()
         {
-            CustomList<int> list = new CustomList<int>();
+            CustomLinkedList<int> list = new CustomLinkedList<int>();
             list.Add(5);
             list.Add(7);
             list.Add(3);
@@ -45,7 +45,7 @@ namespace Utils.Test
             var item1 = new TestReferenceValue() { Name = "Test1" };
             var item2 = new TestReferenceValue() { Name = "Test2" };
             var item3 = new TestReferenceValue() { Name = "Test3" };
-            CustomList<TestReferenceValue> list = new CustomList<TestReferenceValue>();
+            CustomLinkedList<TestReferenceValue> list = new CustomLinkedList<TestReferenceValue>();
             list.Add(item1);
             list.Add(item2);
             list.Add(item3);

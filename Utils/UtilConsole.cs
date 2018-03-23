@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Utils
 {
-    public static class UtilConsole
+    public static class ConsoleHelper
     {
         public static void Debug(string descr)
         {

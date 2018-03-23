@@ -1,6 +1,9 @@
-﻿namespace Utils.Collections
+﻿using System.Collections;
+using System.Collections.Generic;
+
+namespace Utils.Collections
 {
-    public class CustomList<T> : LinkedListBase<T>
+    public class CustomLinkedList<T> : CustomLinkedListBase<T>, IEnumerable<T>
     {
         public Node<T> First
         {
@@ -15,6 +18,14 @@
             get
             {
                 return _tail;
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return GetCount();
             }
         }
 
@@ -42,6 +53,25 @@
             {
                 return false;
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            if (_head != null)
+            {
+                Node<T> _current = _head;
+                while (_current != null)
+                {
+                    var val = _current.Value;
+                    _current = _current.NextNode;
+                    yield return val;
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

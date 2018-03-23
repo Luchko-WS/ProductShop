@@ -40,7 +40,7 @@ namespace ProductShop
                     {
                         //create buyer
                     }
-                    UtilConsole.Debug("Iteration is completed");
+                    ConsoleHelper.Debug("Iteration is completed");
                 }
                 while (!_isWorking.WaitOne(delay));
                 _shop.Close();
@@ -50,7 +50,7 @@ namespace ProductShop
 
         private static void Shop_WorkCompleted(object sender, EventArgs e)
         {
-            UtilConsole.Debug("Shop is complete a work");
+            ConsoleHelper.Debug("Shop is complete a work");
         }
     }
 }
