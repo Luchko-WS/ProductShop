@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProductShop.Actors;
+using System;
 using Utils;
 using Utils.Collections;
 
@@ -57,6 +58,11 @@ namespace ProductShop
             EventHelper.Invoke(CloseStand, this);
         }
 
+        public int GetCountOfBuyersInQueue()
+        {
+            return _buyerQueue.Count;
+        }
+
         public void TryAddBuyerToQueue(Buyer buyer)
         {
             _buyerQueue.Enqueue(buyer);
@@ -77,6 +83,14 @@ namespace ProductShop
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        public int GetSelledProductsCount()
+        {
+            lock (_productCountLocker)
+            {
+                return _selledProductsCount;
             }
         }
 

@@ -69,11 +69,14 @@ namespace ProductShop
 
         private void Stand_WorkCompleted(object sender, EventArgs e)
         {
-            Stand stand = sender as Stand;
+            Stand stand = sender as Stand; //????????
             if (stand != null) stand.WorkCompleted -= Stand_WorkCompleted;
 
             lock (_standsListLocker)
             {
+                int selledProductsCount = stand.GetSelledProductsCount();
+
+                Console.WriteLine($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
                 _stands.Remove(stand);
                 if (_stands.Count == 0)
                 {

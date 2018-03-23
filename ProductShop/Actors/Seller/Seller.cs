@@ -2,11 +2,12 @@
 using System.Threading;
 using Utils;
 
-namespace ProductShop
+namespace ProductShop.Actors
 {
     public class Seller
     {
         private Stand _stand;
+        private SellerHelper _helper;
         private bool _isWorkTime = false;
         private object _locker;
 
@@ -19,25 +20,39 @@ namespace ProductShop
             _locker = new object();
         }
 
+        public bool IsWorkTime
+        {
+            get
+            {
+                lock (_locker)
+                {
+                    return _isWorkTime;
+                }
+            }
+            private set
+            {
+                lock (_locker)
+                {
+                    _isWorkTime = value;
+                }
+            }
+        }
+
         private void DoWork()
         {
             Thread sellerThread = new Thread(() =>
             {
                 while (true)
                 {
-                    bool isWorking;
-                    lock (_locker)
-                    {
-                        isWorking = _isWorkTime;
-                    }
-
                     bool res = _stand.TryGetBuyerFromQueue(out Buyer buyer);                   
-
-                    if (!isWorking && !res) break;
-                    ServeBuyer(buyer);
+                    if (!IsWorkTime && !res /*helper is done*/) break;
+                    if(res) ServeBuyer(buyer);
                 }
                 EventHelper.Invoke(WorkCompleted, this);
             });
+
+            _helper = new SellerHelper(this);
+            sellerThread.Start();
         }
 
         private void ServeBuyer(Buyer buyer)
@@ -49,22 +64,18 @@ namespace ProductShop
             Thread.Sleep(servingTime);
 
             _stand.IncreaseProductsCount(buyer.ProductsNumber);
-
-            //!!!!!!!!!!!!!!!!! recieve buyer to helper
+            _helper.TryAddBuyerToQueue(buyer);      
         }
 
         private void _stand_OpenStand(object sender, EventArgs e)
         {
-            _isWorkTime = true;
+            IsWorkTime = true;
             DoWork();
         }
 
         private void _stand_CloseStand(object sender, EventArgs e)
         {
-            lock (_locker)
-            {
-                _isWorkTime = false;
-            }
+            IsWorkTime = false;
         }
 
         public event EventHandler WorkCompleted;
