@@ -32,7 +32,7 @@ namespace ProductShop
                 seller.WorkCompleted += Seller_WorkCompleted;
                 _sellers.Add(seller);
             }
-            ConsoleHelper.WhiteSuccess($"Sellers created: {sellersCount}");
+            ConsoleHelper.WhiteInfo($"Sellers created: {sellersCount}");
 
             //buyers queue init
             _buyerQueue = new CustomConcurrentQueue<Buyer>();
@@ -106,15 +106,20 @@ namespace ProductShop
         private void Seller_WorkCompleted(object sender, EventArgs e)
         {
             Seller seller = sender as Seller;
-            if (seller != null) seller.WorkCompleted -= Seller_WorkCompleted;
-
-            lock (_sellersListLocker)
+            if (seller != null)
             {
-                _sellers.Remove(seller);
-                ConsoleHelper.WhiteInfo($"The seller of stand with {_product.Name}s has completed the job. {_sellers.Count} left.");
-                if (_sellers.Count == 0)
+                seller.WorkCompleted -= Seller_WorkCompleted;
+
+                lock (_sellersListLocker)
                 {
-                    EventHelper.Invoke(WorkCompleted, this);
+                    _sellers.Remove(seller);
+#if DEBUG
+                    ConsoleHelper.WhiteInfo($"The seller of stand with {_product.Name}s has completed the job. {_sellers.Count} left.");
+#endif
+                    if (_sellers.Count == 0)
+                    {
+                        EventHelper.Invoke(WorkCompleted, this);
+                    }
                 }
             }
         }

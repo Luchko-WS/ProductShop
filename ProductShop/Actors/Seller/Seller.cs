@@ -9,7 +9,7 @@ namespace ProductShop.Actors
         private Stand _stand;
         private SellerHelper _helper;
         private bool _isWorkTime = false;
-        private object _locker;
+        private object _isWorkTimeLocker;
 
         public Seller(Stand stand)
         {
@@ -17,21 +17,21 @@ namespace ProductShop.Actors
             _stand.OpenStand += _stand_OpenStand;
             _stand.CloseStand += _stand_CloseStand;
 
-            _locker = new object();
+            _isWorkTimeLocker = new object();
         }
 
         public bool IsWorkTime
         {
             get
             {
-                lock (_locker)
+                lock (_isWorkTimeLocker)
                 {
                     return _isWorkTime;
                 }
             }
             private set
             {
-                lock (_locker)
+                lock (_isWorkTimeLocker)
                 {
                     _isWorkTime = value;
                 }
@@ -62,7 +62,7 @@ namespace ProductShop.Actors
             //work imitation
             Thread.Sleep(servingTime);
 
-            _stand.IncreaseProductsCount(buyer.ProductsNumber);
+            _stand.IncreaseProductsCount(buyer.ProductsCount);
             _helper.TryAddBuyerToQueue(buyer);      
         }
 

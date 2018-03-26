@@ -7,14 +7,14 @@ namespace ProductShop.Actors
 {
     public class Buyer
     {
-        private CustomLinkedList<Stand> _standToVisit;
-        private int _productsNumber;
+        private CustomLinkedList<Stand> _standsToVisit;
+        private int _productsCount;
 
-        public int ProductsNumber
+        public int ProductsCount
         {
             get
             {
-                return _productsNumber;
+                return _productsCount;
             }
         }
         
@@ -22,10 +22,10 @@ namespace ProductShop.Actors
         {
             if(stands == null) throw new ArgumentNullException("Stands list can't be null");
 
-            _standToVisit = new CustomLinkedList<Stand>();
+            _standsToVisit = new CustomLinkedList<Stand>();
             foreach (var stand in stands)
             {
-                _standToVisit.Add(stand);
+                _standsToVisit.Add(stand);
             }
 
             Thread buyerThread = new Thread(() =>
@@ -45,19 +45,19 @@ namespace ProductShop.Actors
             }
             else
             {
-                EventHelper.Invoke(GoHome, this);
+                EventHelper.Invoke(WorkCompleted, this);
             }
         }
 
         private Stand SelectStand()
         {
             Stand selectedStand = null;
-            if (_standToVisit.Count != 0)
+            if (_standsToVisit.Count != 0)
             {
-                int minCount = _standToVisit.First.Value.GetCountOfBuyersInQueue();
-                selectedStand = _standToVisit.First.Value;
+                int minCount = _standsToVisit.First.Value.GetCountOfBuyersInQueue();
+                selectedStand = _standsToVisit.First.Value;
 
-                var currentNode = _standToVisit.First;
+                var currentNode = _standsToVisit.First;
                 while (currentNode.NextNode != null)
                 {
                     currentNode = currentNode.NextNode;
@@ -67,7 +67,7 @@ namespace ProductShop.Actors
                         selectedStand = currentNode.Value;
                     }
                 }
-                _standToVisit.Remove(selectedStand);
+                _standsToVisit.Remove(selectedStand);
             }
             return selectedStand;
         }
@@ -75,10 +75,10 @@ namespace ProductShop.Actors
         private void BuyProductsFromStand(Stand stand)
         {
             Random rnd = new Random();
-            _productsNumber = rnd.Next(1, 3);
+            _productsCount = rnd.Next(1, 3);
             stand.TryAddBuyerToQueue(this);
         }
 
-        public event EventHandler GoHome;
+        public event EventHandler WorkCompleted;
     }
 }

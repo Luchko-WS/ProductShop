@@ -12,7 +12,7 @@ namespace ProductShop
         private EventWaitHandle _workCompleted;
 
         private int _activeVisitorsCount;
-        private object _visitorsLocker;
+        private object _activeVisitorsCountLocker;
 
         public Shop()
         {
@@ -27,10 +27,12 @@ namespace ProductShop
             Stand standWithChocolates = new Stand(chocolate);
             standWithChocolates.WorkCompleted += Stand_WorkCompleted;
 
-            _stands = new CustomLinkedList<Stand>();
-            _stands.Add(standWithIceCreams);
-            _stands.Add(standWithCakes);
-            _stands.Add(standWithChocolates);
+            _stands = new CustomLinkedList<Stand>
+            {
+                standWithIceCreams,
+                standWithCakes,
+                standWithChocolates
+            };
 
             _standsListLocker = new object();
             _visitorsLocker = new object();
@@ -84,6 +86,12 @@ namespace ProductShop
 
         public void Close()
         {
+            while (ActiveVisitorsCount > 0)
+            {
+                Thread.Sleep(1000);
+                ConsoleHelper.WhiteInfo($"Active buyers: {ActiveVisitorsCount}");
+            }
+
             foreach (var stand in _stands)
             {
                 stand.Close();
@@ -94,22 +102,26 @@ namespace ProductShop
         private void Stand_WorkCompleted(object sender, EventArgs e)
         {
             Stand stand = sender as Stand;
-            if (stand != null) stand.WorkCompleted -= Stand_WorkCompleted;
-
-            lock (_standsListLocker)
+            if (stand != null)
             {
-                int selledProductsCount = stand.GetSelledProductsCount();
+                stand.WorkCompleted -= Stand_WorkCompleted;
 
-                ConsoleHelper.WhiteInfo($"The statistic of stand with {stand.Product.Name}s.");
-                ConsoleHelper.WhiteSuccess($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
-                ConsoleHelper.WhiteInfo($"The stand with {stand.Product.Name}s is closed.");
-
-                TotalProfit += selledProductsCount * stand.Product.Price;
-
-                _stands.Remove(stand);
-                if (_stands.Count == 0)
+                lock (_standsListLocker)
                 {
-                    _workCompleted.Set();
+                    int selledProductsCount = stand.GetSelledProductsCount();
+
+                    ConsoleHelper.WhiteInfo($"The statistic of stand with {stand.Product.Name}s.");
+                    ConsoleHelper.WhiteSuccess($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
+#if DEBUG
+                    ConsoleHelper.WhiteInfo($"The stand with {stand.Product.Name}s is closed.");
+#endif
+                    TotalProfit += selledProductsCount * stand.Product.Price;
+
+                    _stands.Remove(stand);
+                    if (_stands.Count == 0)
+                    {
+                        _workCompleted.Set();
+                    }
                 }
             }
         }
