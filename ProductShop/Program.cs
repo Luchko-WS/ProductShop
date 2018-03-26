@@ -54,7 +54,7 @@ namespace ProductShop
             ConsoleHelper.WhiteSuccess($"Visitors: {_shop.Visitors}");
             ConsoleHelper.WhiteSuccess($"Total profit: {_shop.TotalProfit}");
 #if DEBUG
-                Console.WriteLine("Shop is closed");
+            Console.WriteLine("Shop is closed");
 #endif
         }
 
