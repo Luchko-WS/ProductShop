@@ -64,7 +64,7 @@ namespace ProductShop
             return _buyerQueue.Count;
         }
 
-        public void TryAddBuyerToQueue(Buyer buyer)
+        public void AddBuyerToQueue(Buyer buyer)
         {
             _buyerQueue.Enqueue(buyer);
         }

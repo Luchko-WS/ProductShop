@@ -63,7 +63,7 @@ namespace ProductShop.Actors
             Thread.Sleep(servingTime);
 
             _stand.IncreaseProductsCount(buyer.ProductsCount);
-            _helper.TryAddBuyerToQueue(buyer);      
+            _helper.AddBuyerToQueue(buyer);      
         }
 
         private void _stand_OpenStand(object sender, EventArgs e)

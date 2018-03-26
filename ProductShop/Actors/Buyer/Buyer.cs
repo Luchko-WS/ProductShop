@@ -76,7 +76,7 @@ namespace ProductShop.Actors
         {
             Random rnd = new Random();
             _productsCount = rnd.Next(1, 3);
-            stand.TryAddBuyerToQueue(this);
+            stand.AddBuyerToQueue(this);
         }
 
         public event EventHandler WorkCompleted;

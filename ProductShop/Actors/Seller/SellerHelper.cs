@@ -16,7 +16,7 @@ namespace ProductShop.Actors
             DoWork();
         }
 
-        public void TryAddBuyerToQueue(Buyer buyer)
+        public void AddBuyerToQueue(Buyer buyer)
         {
             _buyerQueue.Enqueue(buyer);
         }

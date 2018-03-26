@@ -38,13 +38,13 @@ namespace ProductShop
             }
 
             //start
-            ConsoleHelper.WhiteTips("Press ENTER to start");
+            ConsoleHelper.WhiteTips("Press ENTER to open the shop");
             Console.ReadLine();
 
             DoWork(X, (int)(Y * 1000));
 
             //stop
-            ConsoleHelper.WhiteTips("Pres ENTER to stop");
+            ConsoleHelper.WhiteTips("Pres ENTER to close the shop");
             Console.ReadLine();
             _isWorkingEventWaitHandle.Set();
 
@@ -71,7 +71,7 @@ namespace ProductShop
 #if DEBUG
                     Console.WriteLine("Buyers creating...");
 #endif
-                    Parallel.For(0, buyersCount, (i) =>
+                    Parallel.For(0, buyersCount, body: (i) =>
                     {
                         Buyer buyer = new Buyer(_shop.Stands);
                         buyer.WorkCompleted += Buyer_WorkCompleted;
