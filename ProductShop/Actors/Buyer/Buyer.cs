@@ -7,6 +7,7 @@ namespace ProductShop.Actors
 {
     public class Buyer
     {
+        private Shop _shop;
         private CustomLinkedList<Stand> _standsToVisit;
         private int _productsCount;
 
@@ -18,12 +19,12 @@ namespace ProductShop.Actors
             }
         }
         
-        public Buyer(CustomLinkedList<Stand> stands)
+        public Buyer(Shop shop)
         {
-            if(stands == null) throw new ArgumentNullException("Stands list can't be null");
+            _shop = shop ?? throw new ArgumentNullException("Shop can't be null");
 
             _standsToVisit = new CustomLinkedList<Stand>();
-            foreach (var stand in stands)
+            foreach (var stand in shop.Stands)
             {
                 _standsToVisit.Add(stand);
             }
@@ -33,6 +34,7 @@ namespace ProductShop.Actors
                 DoWork();
             });
 
+            _shop.RegisterBuyer();
             buyerThread.Start();
         }
 
@@ -45,7 +47,7 @@ namespace ProductShop.Actors
             }
             else
             {
-                EventHelper.Invoke(WorkCompleted, this);
+                _shop.UnregisterBuyer();
             }
         }
 
@@ -78,7 +80,5 @@ namespace ProductShop.Actors
             _productsCount = rnd.Next(1, 3);
             stand.AddBuyerToQueue(this);
         }
-
-        public event EventHandler WorkCompleted;
     }
 }

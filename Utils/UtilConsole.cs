@@ -18,22 +18,22 @@ namespace Utils
             }
         }
 
-        public static void WhiteInfo(string descr)
+        public static void WriteInfo(string descr)
         {
             WriteInConsoleWithColor(descr, ConsoleColor.White);
         }
 
-        public static void WhiteSuccess(string descr)
+        public static void WriteSuccess(string descr)
         {
             WriteInConsoleWithColor(descr, ConsoleColor.Green);
         }
 
-        public static void WhiteDanger(string descr)
+        public static void WriteDanger(string descr)
         {
             WriteInConsoleWithColor(descr, ConsoleColor.Red);
         }
 
-        public static void WhiteTips(string descr)
+        public static void WriteTips(string descr)
         {
             WriteInConsoleWithColor(descr, ConsoleColor.Yellow);
         }

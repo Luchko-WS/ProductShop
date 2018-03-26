@@ -9,12 +9,13 @@ namespace ProductShop
     {
         private CustomLinkedList<Stand> _stands;
         private object _standsListLocker;
-        private EventWaitHandle _workCompleted;
-
-        private int _visitors;
+        
+        private int _visitors = 0;
         private object _visitorsCountLocker;
-        private int _activeVisitorsCount;
+        private int _activeVisitorsCount = 0;
         private object _activeVisitorsCountLocker;
+
+        private EventWaitHandle _workCompleted;
 
         public Shop()
         {
@@ -42,6 +43,25 @@ namespace ProductShop
             _workCompleted = new EventWaitHandle(false, EventResetMode.ManualReset);
         }
 
+        public CustomLinkedList<Stand> Stands
+        {
+            get
+            {
+                return _stands;
+            }
+        }
+
+        public int ActiveVisitorsCount
+        {
+            get
+            {
+                lock (_activeVisitorsCountLocker)
+                {
+                    return _activeVisitorsCount;
+                }
+            }
+        }
+
         public int Visitors
         {
             get
@@ -59,34 +79,8 @@ namespace ProductShop
                 }
             }
         }
-        
+
         public double TotalProfit { get; set; }
-
-        public int ActiveVisitorsCount
-        {
-            get
-            {
-                lock (_activeVisitorsCountLocker)
-                {
-                    return _activeVisitorsCount;
-                }
-            }
-            set
-            {
-                lock (_activeVisitorsCountLocker)
-                {
-                    _activeVisitorsCount = value;
-                }
-            }
-        }
-
-        public CustomLinkedList<Stand> Stands
-        {
-            get
-            {
-                return _stands;
-            }
-        }
 
         public EventWaitHandle WorkCompleted
         {
@@ -109,12 +103,28 @@ namespace ProductShop
             while (ActiveVisitorsCount > 0)
             {
                 Thread.Sleep(1000);
-                ConsoleHelper.WhiteInfo($"Active buyers: {ActiveVisitorsCount}");
+                ConsoleHelper.WriteInfo($"Active buyers: {ActiveVisitorsCount}");
             }
 
             foreach (var stand in _stands)
             {
                 stand.Close();
+            }
+        }
+
+        public void RegisterBuyer()
+        {
+            lock (_activeVisitorsCountLocker)
+            {
+                _activeVisitorsCount++;
+            }
+        }
+
+        public void UnregisterBuyer()
+        {
+            lock (_activeVisitorsCountLocker)
+            {
+                _activeVisitorsCount--;
             }
         }
 
@@ -130,10 +140,10 @@ namespace ProductShop
                 {
                     int selledProductsCount = stand.GetSelledProductsCount();
 
-                    ConsoleHelper.WhiteInfo($"The statistic of stand with {stand.Product.Name}s.");
-                    ConsoleHelper.WhiteSuccess($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
+                    ConsoleHelper.WriteInfo($"The statistic of stand with {stand.Product.Name}s.");
+                    ConsoleHelper.WriteSuccess($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
 #if DEBUG
-                    ConsoleHelper.WhiteInfo($"The stand with {stand.Product.Name}s is closed.");
+                    ConsoleHelper.WriteInfo($"The stand with {stand.Product.Name}s is closed.");
 #endif
                     TotalProfit += selledProductsCount * stand.Product.Price;
 

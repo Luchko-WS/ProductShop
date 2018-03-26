@@ -57,8 +57,8 @@ namespace ProductShop.Actors
         private void ServeBuyer(Buyer buyer)
         {
             Random rnd = new Random();
-            int servingTime = rnd.Next(100, 500);
-            
+            int servingTime = rnd.Next(10, 50);
+
             //work imitation
             Thread.Sleep(servingTime);
 

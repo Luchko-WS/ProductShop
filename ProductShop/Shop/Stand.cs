@@ -26,13 +26,14 @@ namespace ProductShop
             int sellersCount = rnd.Next(3, 7);
 
             _sellers = new CustomLinkedList<Seller>();
-            for(int i = 0; i < sellersCount; i++)
+
+            for (int i = 0; i < sellersCount; i++)
             {
                 var seller = new Seller(this);
                 seller.WorkCompleted += Seller_WorkCompleted;
                 _sellers.Add(seller);
             }
-            ConsoleHelper.WhiteInfo($"Sellers created: {sellersCount}");
+            ConsoleHelper.WriteInfo($"Sellers created: {sellersCount}");
 
             //buyers queue init
             _buyerQueue = new CustomConcurrentQueue<Buyer>();
@@ -114,7 +115,7 @@ namespace ProductShop
                 {
                     _sellers.Remove(seller);
 #if DEBUG
-                    ConsoleHelper.WhiteInfo($"The seller of stand with {_product.Name}s has completed the job. {_sellers.Count} left.");
+                    ConsoleHelper.WriteInfo($"The seller of stand with {_product.Name}s has completed the job. {_sellers.Count} left.");
 #endif
                     if (_sellers.Count == 0)
                     {

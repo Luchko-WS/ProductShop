@@ -25,34 +25,34 @@ namespace ProductShop
             {
                 try
                 {
-                    ConsoleHelper.WhiteTips("Enter numbers of buyers (X):");
+                    ConsoleHelper.WriteTips("Enter numbers of buyers (X):");
                     X = Convert.ToInt32(Console.ReadLine());
-                    ConsoleHelper.WhiteTips("Enter delay (Y) (in seconds):");
+                    ConsoleHelper.WriteTips("Enter delay (Y) (in seconds):");
                     Y = Convert.ToDouble(Console.ReadLine());
                     break;
                 }
                 catch (FormatException)
                 {
-                    ConsoleHelper.WhiteDanger("Wrong format of input value.");
+                    ConsoleHelper.WriteDanger("Wrong format of input value.");
                 }
             }
 
             //start
-            ConsoleHelper.WhiteTips("Press ENTER to open the shop");
+            ConsoleHelper.WriteTips("Press ENTER to open the shop");
             Console.ReadLine();
 
             DoWork(X, (int)(Y * 1000));
 
             //stop
-            ConsoleHelper.WhiteTips("Pres ENTER to close the shop");
+            ConsoleHelper.WriteTips("Pres ENTER to close the shop");
             Console.ReadLine();
             _isWorkingEventWaitHandle.Set();
 
-            ConsoleHelper.WhiteTips("Please wait...");
+            ConsoleHelper.WriteTips("Please wait...");
             _shop.WorkCompleted.WaitOne(-1);
 
-            ConsoleHelper.WhiteSuccess($"Visitors: {_shop.Visitors}");
-            ConsoleHelper.WhiteSuccess($"Total profit: {_shop.TotalProfit}");
+            ConsoleHelper.WriteSuccess($"Visitors: {_shop.Visitors}");
+            ConsoleHelper.WriteSuccess($"Total profit: {_shop.TotalProfit}");
 #if DEBUG
             Console.WriteLine("Shop is closed");
 #endif
@@ -73,9 +73,7 @@ namespace ProductShop
 #endif
                     Parallel.For(0, buyersCount, body: (i) =>
                     {
-                        Buyer buyer = new Buyer(_shop.Stands);
-                        buyer.WorkCompleted += Buyer_WorkCompleted;
-                        _shop.ActiveVisitorsCount++;
+                        Buyer buyer = new Buyer(_shop);
                         _shop.Visitors++;
                     });
 #if DEBUG
@@ -88,15 +86,6 @@ namespace ProductShop
             });
 
             generateThread.Start();
-        }
-
-        private static void Buyer_WorkCompleted(object sender, EventArgs e)
-        {
-            if (sender is Buyer)
-            {
-                _shop.ActiveVisitorsCount--;
-                ((Buyer)sender).WorkCompleted -= Buyer_WorkCompleted;
-            }
         }
     }
 }
