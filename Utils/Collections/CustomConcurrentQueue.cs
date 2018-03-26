@@ -30,32 +30,23 @@ namespace Utils.Collections
             }
         }
 
-        public bool Dequeue(out T item)
+        public T Dequeue()
         {
             lock (_locker)
             {
-                if (_head == null)
-                {
-                    item = default(T);
-                    return false;
-                }
-                item = _head.Value;
+                if (_head == null) throw new InvalidOperationException("Queue is empty");
+                var item = _head.Value;
                 RemoveNode(_head);
-                return true;
+                return item;
             }
         }
 
-        public bool Peek(out T item)
+        public T Peek()
         {
             lock (_locker)
             {
-                if (_head == null)
-                {
-                    item = default(T);
-                    return false;
-                }
-                item = _head.Value;
-                return true;
+                if (_head == null) throw new InvalidOperationException("Queue is empty");
+                return _head.Value;
             }
         }
     }
