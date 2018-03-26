@@ -8,7 +8,6 @@ namespace Utils.Test
     public class CustomConcurrentQueueTest
     {
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void AddAndGetElementsInCustomConcurrentQueue()
         {
             CustomConcurrentQueue<int> queue = new CustomConcurrentQueue<int>();
@@ -19,12 +18,15 @@ namespace Utils.Test
             int exp2 = 3;
             int expectedCpunt = 0;
 
-            Assert.AreEqual(exp1, queue.Dequeue());
-            Assert.AreEqual(exp2, queue.Dequeue());
+            int actual;
+            queue.Dequeue(out actual);
+            Assert.AreEqual(exp1, actual);
+            queue.Dequeue(out actual);
+            Assert.AreEqual(exp2, actual);
             Assert.AreEqual(expectedCpunt, queue.Count);
 
-            //exception
-            queue.Dequeue();
+            //queue is empty
+            Assert.AreEqual(false, queue.Dequeue(out actual));
         }
 
         [TestMethod]
@@ -39,7 +41,9 @@ namespace Utils.Test
             int expectedCount = 4;
             int expectedItem = 5;
 
-            Assert.AreEqual(expectedItem, queue.Peek());
+            int actual;
+            queue.Peek(out actual);
+            Assert.AreEqual(expectedItem, actual);
             Assert.AreEqual(expectedCount, queue.Count);
         }
     }

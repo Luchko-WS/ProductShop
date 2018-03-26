@@ -71,20 +71,7 @@ namespace ProductShop
 
         public bool TryGetBuyerFromQueue(out Buyer buyer)
         {
-            buyer = null;
-            try
-            {
-                buyer = _buyerQueue.Dequeue();
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return _buyerQueue.Dequeue(out buyer);
         }
 
         public int GetSelledProductsCount()

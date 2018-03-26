@@ -44,7 +44,7 @@ namespace ProductShop.Actors
             {
                 while (IsWorkTime)
                 {
-                    bool res = _stand.TryGetBuyerFromQueue(out Buyer buyer);                   
+                    bool res = _stand.TryGetBuyerFromQueue(out Buyer buyer);
                     if(res) ServeBuyer(buyer);
                 }
                 EventHelper.Invoke(WorkCompleted, this);
@@ -75,6 +75,8 @@ namespace ProductShop.Actors
         private void _stand_CloseStand(object sender, EventArgs e)
         {
             IsWorkTime = false;
+            _stand.OpenStand -= _stand_OpenStand;
+            _stand.CloseStand -= _stand_CloseStand;
         }
 
         public event EventHandler WorkCompleted;

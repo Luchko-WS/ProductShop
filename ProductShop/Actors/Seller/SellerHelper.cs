@@ -37,20 +37,7 @@ namespace ProductShop.Actors
 
         private bool TryGetBuyerFromQueue(out Buyer buyer)
         {
-            buyer = null;
-            try
-            {
-                buyer = _buyerQueue.Dequeue();
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return _buyerQueue.Dequeue(out buyer);
         }
     }
 }
