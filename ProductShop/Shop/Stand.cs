@@ -8,37 +8,34 @@ namespace ProductShop
     public class Stand
     {
         private Product _product;
-        private CustomLinkedList<Seller> _sellers;
+        private int _sellersCount = 0;
         private CustomConcurrentQueue<Buyer> _buyerQueue;
-        private int _selledProductsCount;
+        private int _selledProductsCount = 0;
 
-        private object _sellersListLocker;
+        private object _sellersCountLocker;
         private object _productCountLocker;
 
         public Stand(Product product)
         {
             //product init
             _product = product ?? throw new ArgumentNullException("Product can't be null");
-            _selledProductsCount = 0;
 
             //sellers init
             Random rnd = new Random(DateTime.Now.Millisecond);
             int sellersCount = rnd.Next(3, 7);
 
-            _sellers = new CustomLinkedList<Seller>();
-
             for (int i = 0; i < sellersCount; i++)
             {
                 var seller = new Seller(this);
                 seller.WorkCompleted += Seller_WorkCompleted;
-                _sellers.Add(seller);
+                _sellersCount++;
             }
             ConsoleHelper.WriteInfo($"Sellers created: {sellersCount}");
 
             //buyers queue init
             _buyerQueue = new CustomConcurrentQueue<Buyer>();
 
-            _sellersListLocker = new object();
+            _sellersCountLocker = new object();
             _productCountLocker = new object();
         }
 
@@ -111,13 +108,13 @@ namespace ProductShop
             {
                 seller.WorkCompleted -= Seller_WorkCompleted;
 
-                lock (_sellersListLocker)
+                lock (_sellersCountLocker)
                 {
-                    _sellers.Remove(seller);
+                    _sellersCount--;
 #if DEBUG
-                    ConsoleHelper.WriteInfo($"The seller of stand with {_product.Name}s has completed the job. {_sellers.Count} left.");
+                    ConsoleHelper.WriteInfo($"The seller of stand with {_product.Name}s has completed the job. {_sellersCount} left.");
 #endif
-                    if (_sellers.Count == 0)
+                    if (_sellersCount == 0)
                     {
                         EventHelper.Invoke(WorkCompleted, this);
                     }

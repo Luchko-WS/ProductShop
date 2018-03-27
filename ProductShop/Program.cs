@@ -10,7 +10,7 @@ namespace ProductShop
     {
         static private Shop _shop;
         static object _locker = new object();
-        static private EventWaitHandle _isAppWorkingEventWaitHandle;
+        static private EventWaitHandle _isFinishOfWorkEventWaitHandle;
 
         static void Main(string[] args)
         {
@@ -19,7 +19,7 @@ namespace ProductShop
 
             //init
             _shop = new Shop();
-            _isAppWorkingEventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            _isFinishOfWorkEventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
             while (true)
             {
@@ -46,23 +46,22 @@ namespace ProductShop
             //stop
             ConsoleHelper.WriteTips("Pres ENTER to close the shop");
             Console.ReadLine();
-            _isAppWorkingEventWaitHandle.Set();
+            _isFinishOfWorkEventWaitHandle.Set();
 
             ConsoleHelper.WriteTips("Please wait...");
             _shop.WorkCompleted.WaitOne(-1);
-
+#if DEBUG
+            ConsoleHelper.WriteInfo("Shop is closed");
+#endif
             ConsoleHelper.WriteSuccess($"Visitors: {_shop.VisitorsCount}");
             ConsoleHelper.WriteSuccess($"Total profit: {_shop.TotalProfit}");
-#if DEBUG
-            Console.WriteLine("Shop is closed");
-#endif
         }
 
-        static void DoWork(int buyersCount, int delay)
+        static void DoWork(int buyersCount, int timeout)
         {
-            Thread generateThread = new Thread(() =>
+            Thread generateBuyersThread = new Thread(() =>
             {
-                ConsoleHelper.WriteInfo("Shop opening...");
+                ConsoleHelper.WriteInfo("Shop is opening...");
                 _shop.Open();
                 ConsoleHelper.WriteInfo("Shop is opened. Work is started.");
 
@@ -79,12 +78,12 @@ namespace ProductShop
                     Console.WriteLine("Iteration is completed");
 #endif
                 }
-                while (!_isAppWorkingEventWaitHandle.WaitOne(delay));
+                while (!_isFinishOfWorkEventWaitHandle.WaitOne(timeout));
 
                 _shop.Close();
             });
 
-            generateThread.Start();
+            generateBuyersThread.Start();
         }
     }
 }
