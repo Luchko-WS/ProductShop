@@ -62,9 +62,9 @@ namespace ProductShop
         {
             Thread generateThread = new Thread(() =>
             {
-                Console.WriteLine("Shop opening...");
+                ConsoleHelper.WriteInfo("Shop opening...");
                 _shop.Open();
-                Console.WriteLine("Shop is opened. Work is started.");
+                ConsoleHelper.WriteInfo("Shop is opened. Work is started.");
 
                 do
                 {
