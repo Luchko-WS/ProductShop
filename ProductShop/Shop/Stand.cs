@@ -60,7 +60,7 @@ namespace ProductShop
             EventHelper.Invoke(CloseStand, this);
         }
 
-        public int GetCountOfBuyersInQueue()
+        public int GetBuyersCountInQueue()
         {
             return _buyerQueue.Count;
         }

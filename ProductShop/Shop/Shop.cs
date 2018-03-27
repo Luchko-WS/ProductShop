@@ -10,7 +10,7 @@ namespace ProductShop
         private CustomLinkedList<Stand> _stands;
         private object _standsListLocker;
         
-        private int _visitors = 0;
+        private int _visitorsCount = 0;
         private int _activeVisitorsCount = 0;
         private object _activeVisitorsCountLocker;
 
@@ -60,11 +60,11 @@ namespace ProductShop
             }
         }
 
-        public int Visitors
+        public int VisitorsCount
         {
             get
             {
-                return _visitors;
+                return _visitorsCount;
             }
         }
 
@@ -105,7 +105,7 @@ namespace ProductShop
             lock (_activeVisitorsCountLocker)
             {
                 _activeVisitorsCount++;
-                _visitors++;
+                _visitorsCount++;
             }
         }
 
@@ -120,8 +120,7 @@ namespace ProductShop
         //change this method
         private void Stand_WorkCompleted(object sender, EventArgs e)
         {
-            Stand stand = sender as Stand;
-            if (stand != null)
+            if (sender is Stand stand)
             {
                 stand.WorkCompleted -= Stand_WorkCompleted;
 

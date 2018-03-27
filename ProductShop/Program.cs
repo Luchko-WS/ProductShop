@@ -10,7 +10,7 @@ namespace ProductShop
     {
         static private Shop _shop;
         static object _locker = new object();
-        static private EventWaitHandle _isWorkingEventWaitHandle;
+        static private EventWaitHandle _isAppWorkingEventWaitHandle;
 
         static void Main(string[] args)
         {
@@ -19,7 +19,7 @@ namespace ProductShop
 
             //init
             _shop = new Shop();
-            _isWorkingEventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            _isAppWorkingEventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
             while (true)
             {
@@ -46,12 +46,12 @@ namespace ProductShop
             //stop
             ConsoleHelper.WriteTips("Pres ENTER to close the shop");
             Console.ReadLine();
-            _isWorkingEventWaitHandle.Set();
+            _isAppWorkingEventWaitHandle.Set();
 
             ConsoleHelper.WriteTips("Please wait...");
             _shop.WorkCompleted.WaitOne(-1);
 
-            ConsoleHelper.WriteSuccess($"Visitors: {_shop.Visitors}");
+            ConsoleHelper.WriteSuccess($"Visitors: {_shop.VisitorsCount}");
             ConsoleHelper.WriteSuccess($"Total profit: {_shop.TotalProfit}");
 #if DEBUG
             Console.WriteLine("Shop is closed");
@@ -79,7 +79,7 @@ namespace ProductShop
                     Console.WriteLine("Iteration is completed");
 #endif
                 }
-                while (!_isWorkingEventWaitHandle.WaitOne(delay));
+                while (!_isAppWorkingEventWaitHandle.WaitOne(delay));
 
                 _shop.Close();
             });

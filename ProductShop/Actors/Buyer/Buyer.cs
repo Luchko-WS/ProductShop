@@ -56,16 +56,17 @@ namespace ProductShop.Actors
             Stand selectedStand = null;
             if (_standsToVisit.Count != 0)
             {
-                int minCount = _standsToVisit.First.Value.GetCountOfBuyersInQueue();
+                int minCount = _standsToVisit.First.Value.GetBuyersCountInQueue();
                 selectedStand = _standsToVisit.First.Value;
 
                 var currentNode = _standsToVisit.First;
                 while (currentNode.NextNode != null)
                 {
                     currentNode = currentNode.NextNode;
-                    if (minCount > currentNode.Value.GetCountOfBuyersInQueue())
+                    int buyersCountInQueue = currentNode.Value.GetBuyersCountInQueue();
+                    if (minCount > buyersCountInQueue)
                     {
-                        minCount = currentNode.Value.GetCountOfBuyersInQueue();
+                        minCount = buyersCountInQueue;
                         selectedStand = currentNode.Value;
                     }
                 }
