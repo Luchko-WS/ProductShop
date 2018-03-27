@@ -11,7 +11,6 @@ namespace ProductShop
         private object _standsListLocker;
         
         private int _visitors = 0;
-        private object _visitorsCountLocker;
         private int _activeVisitorsCount = 0;
         private object _activeVisitorsCountLocker;
 
@@ -38,7 +37,6 @@ namespace ProductShop
             };
 
             _standsListLocker = new object();
-            _visitorsCountLocker = new object();
             _activeVisitorsCountLocker = new object();
             _workCompleted = new EventWaitHandle(false, EventResetMode.ManualReset);
         }
@@ -66,17 +64,7 @@ namespace ProductShop
         {
             get
             {
-                lock (_visitorsCountLocker)
-                {
-                    return _visitors;
-                }
-            }
-            set
-            {
-                lock (_visitorsCountLocker)
-                {
-                    _visitors = value;
-                }
+                return _visitors;
             }
         }
 
@@ -117,6 +105,7 @@ namespace ProductShop
             lock (_activeVisitorsCountLocker)
             {
                 _activeVisitorsCount++;
+                _visitors++;
             }
         }
 

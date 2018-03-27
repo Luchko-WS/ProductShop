@@ -74,7 +74,6 @@ namespace ProductShop
                     Parallel.For(0, buyersCount, body: (i) =>
                     {
                         Buyer buyer = new Buyer(_shop);
-                        _shop.Visitors++;
                     });
 #if DEBUG
                     Console.WriteLine("Iteration is completed");
