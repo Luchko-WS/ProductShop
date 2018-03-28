@@ -120,7 +120,8 @@ namespace ProductShop
         //change this method
         private void Stand_WorkCompleted(object sender, EventArgs e)
         {
-            if (sender is Stand stand)
+            Stand stand = sender as Stand;
+            if (stand != null)
             {
                 stand.WorkCompleted -= Stand_WorkCompleted;
 
