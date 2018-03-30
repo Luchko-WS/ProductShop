@@ -93,8 +93,8 @@ namespace ProductShop.Actors
             _currentStand = stand;
             if (ProgramConfig.BuyerConfig.ShowBuyerLogInConsole)
             {
-                ConsoleHelper.WriteInfo($"\nBuyer {_guid.ToString()} say:\nI am coming to stand with {stand.Product.Name}s." +
-                    $" I want to buy {productCount} {stand.Product.Name}(s).");
+                ConsoleHelper.WriteInfo(String.Format("\nBuyer {0} say:\nI am coming to stand with {1}s.", _guid.ToString(), stand.Product.Name) +
+                    String.Format(" I want to buy {0} {1}(s).", productCount, stand.Product.Name));
             }
         }
 
@@ -104,7 +104,7 @@ namespace ProductShop.Actors
             {
                 if (ProgramConfig.BuyerConfig.ShowBuyerLogInConsole)
                 {
-                    ConsoleHelper.WriteInfo($"\nBayer {_guid.ToString()} say:\nI am leaving the stand with {_currentStand.Product.Name}s.");
+                    ConsoleHelper.WriteInfo(String.Format("\nBayer {0} say:\nI am leaving the stand with {1}s.", _guid.ToString(), _currentStand.Product.Name));
                 }
                 _currentStand = null;
             }

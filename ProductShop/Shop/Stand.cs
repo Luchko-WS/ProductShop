@@ -30,7 +30,7 @@ namespace ProductShop
                 seller.OnWorkCompleted += Seller_OnWorkCompleted;
                 _sellersCount++;
             }
-            ConsoleHelper.WriteInfo($"Sellers created: {sellersCount}");
+            ConsoleHelper.WriteInfo(String.Format("Sellers created: {0}", sellersCount));
 
             //buyers queue init
             _buyerQueue = new CustomConcurrentQueue<Buyer>();
@@ -104,8 +104,8 @@ namespace ProductShop
         public void ShowStatistic()
         {
             var productCount = _selledProductsCount;
-            ConsoleHelper.WriteSuccess($"The statistic of stand with {_product.Name}s.\n" +
-                $"Selled product: {_product.Name}, count: {productCount}, profit: {productCount * _product.Price}");
+            ConsoleHelper.WriteSuccess(String.Format("The statistic of stand with {0}s.\n", _product.Name) +
+                String.Format("Selled product: {0}, count: {1}, profit: {2}", _product.Name, productCount, productCount * _product.Price));
         }
 
         private void Seller_OnWorkCompleted(object sender, EventArgs e)
@@ -119,7 +119,7 @@ namespace ProductShop
                 {
                     _sellersCount--;
 #if DEBUG
-                    ConsoleHelper.WriteInfo($"The seller of stand with {_product.Name}s has completed the job. {_sellersCount} left.");
+                    ConsoleHelper.WriteInfo(String.Format("The seller of stand with {0}s has completed the job. {1} left.", _product.Name, _sellersCount));
 #endif
                     if (_sellersCount == 0)
                     {

@@ -44,7 +44,8 @@ namespace ProductShop.Actors
             {
                 while (IsWorkTime)
                 {
-                    bool res = _stand.TryGetBuyerFromQueue(out Buyer buyer);
+                    Buyer buyer;
+                    bool res = _stand.TryGetBuyerFromQueue(out buyer);
                     if(res) ServeBuyer(buyer);
                 }
                 EventHelper.Invoke(OnWorkCompleted, this);

@@ -27,7 +27,8 @@ namespace ProductShop.Actors
             {
                 while (_seller.IsWorkTime)
                 {
-                    bool res = TryGetBuyerFromQueue(out Buyer buyer);
+                    Buyer buyer;
+                    bool res = TryGetBuyerFromQueue(out buyer);
                     if (res) buyer.DoWork();
                 }
             });

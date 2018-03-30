@@ -94,7 +94,7 @@ namespace ProductShop
             while (ActiveVisitorsCount > 0)
             {
                 Thread.Sleep(1000);
-                ConsoleHelper.WriteInfo($"Active buyers: {ActiveVisitorsCount}");
+                ConsoleHelper.WriteInfo(String.Format("Active buyers: {0}", ActiveVisitorsCount));
             }
 
             foreach (var stand in _stands)
@@ -122,7 +122,7 @@ namespace ProductShop
 
         public void ShowStatistic()
         {
-            ConsoleHelper.WriteSuccess($"Visitors: {VisitorsCount}");
+            ConsoleHelper.WriteSuccess(String.Format("Visitors: {0}", VisitorsCount));
             foreach (var stand in _stands)
             {
                 stand.ShowStatistic();
@@ -141,7 +141,7 @@ namespace ProductShop
                     TotalProfit += stand.SelledProductsCount * stand.Product.Price;
                     stand.ShowStatistic();
 #if DEBUG
-                    ConsoleHelper.WriteInfo($"The stand with {stand.Product.Name}s is closed.");
+                    ConsoleHelper.WriteInfo(String.Format("The stand with {0}s is closed.", stand.Product.Name));
 #endif
                     _stands.Remove(stand);
                     if (_stands.Count == 0)

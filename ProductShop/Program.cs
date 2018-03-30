@@ -64,8 +64,8 @@ namespace ProductShop
 
             _isFinishOfWorkEventWaitHandle.Set();
             _shop.WorkCompleted.WaitOne(-1);
-            ConsoleHelper.WriteSuccess($"Visitors: {_shop.VisitorsCount}");
-            ConsoleHelper.WriteSuccess($"Total profit: {_shop.TotalProfit}");
+            ConsoleHelper.WriteSuccess(String.Format("Visitors: {0}", _shop.VisitorsCount));
+            ConsoleHelper.WriteSuccess(String.Format("Total profit: {0}", _shop.TotalProfit));
         }
 
         static void DoWork(int buyersCount, int timeout)
