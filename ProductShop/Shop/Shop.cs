@@ -90,7 +90,7 @@ namespace ProductShop
 
         public void Close()
         {
-            ConsoleHelper.WriteInfo("Shop is closing.");
+            ConsoleHelper.WriteInfo("Shop is closing...");
             while (ActiveVisitorsCount > 0)
             {
                 Thread.Sleep(1000);
@@ -122,6 +122,7 @@ namespace ProductShop
 
         public void ShowStatistic()
         {
+            ConsoleHelper.WriteSuccess($"Visitors: {VisitorsCount}");
             foreach (var stand in _stands)
             {
                 stand.ShowStatistic();
