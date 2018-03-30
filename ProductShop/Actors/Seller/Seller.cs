@@ -14,8 +14,8 @@ namespace ProductShop.Actors
         public Seller(Stand stand)
         {
             _stand = stand ?? throw new ArgumentNullException("Stand can't be null");
-            _stand.OpenStand += _stand_OpenStand;
-            _stand.CloseStand += _stand_CloseStand;
+            _stand.OnStandOpening += _stand_OnStandOpening;
+            _stand.OnStandClosing += _stand_OnStandClosing;
 
             _isWorkTimeLocker = new object();
         }
@@ -47,7 +47,7 @@ namespace ProductShop.Actors
                     bool res = _stand.TryGetBuyerFromQueue(out Buyer buyer);
                     if(res) ServeBuyer(buyer);
                 }
-                EventHelper.Invoke(WorkCompleted, this);
+                EventHelper.Invoke(OnWorkCompleted, this);
             });
 
             _helper = new SellerHelper(this);
@@ -57,7 +57,7 @@ namespace ProductShop.Actors
         private void ServeBuyer(Buyer buyer)
         {
             Random rnd = new Random();
-            int servingTime = rnd.Next(10, 50);
+            int servingTime = rnd.Next(ProgramConfig.SellerConfig.MinServingTime, ProgramConfig.SellerConfig.MaxServingTime);
 
             //work imitation
             Thread.Sleep(servingTime);
@@ -66,19 +66,19 @@ namespace ProductShop.Actors
             _helper.AddBuyerToQueue(buyer);      
         }
 
-        private void _stand_OpenStand(object sender, EventArgs e)
+        private void _stand_OnStandOpening(object sender, EventArgs e)
         {
             IsWorkTime = true;
             DoWork();
         }
 
-        private void _stand_CloseStand(object sender, EventArgs e)
+        private void _stand_OnStandClosing(object sender, EventArgs e)
         {
             IsWorkTime = false;
-            _stand.OpenStand -= _stand_OpenStand;
-            _stand.CloseStand -= _stand_CloseStand;
+            _stand.OnStandOpening -= _stand_OnStandOpening;
+            _stand.OnStandClosing -= _stand_OnStandClosing;
         }
 
-        public event EventHandler WorkCompleted;
+        public event EventHandler OnWorkCompleted;
     }
 }

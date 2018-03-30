@@ -83,7 +83,7 @@ namespace ProductShop.Actors
         private void BuyProductsFromStand(Stand stand)
         {
             Random rnd = new Random();
-            _productsCount = rnd.Next(1, 3);
+            _productsCount = rnd.Next(ProgramConfig.BuyerConfig.MinNumbersOfProducts, ProgramConfig.BuyerConfig.MaxNumbersOfProducts);
             SetCurrentStand(stand, _productsCount);
             stand.AddBuyerToQueue(this);
         }
@@ -100,6 +100,7 @@ namespace ProductShop.Actors
             if (_currentStand != null)
             {
                 ConsoleHelper.WriteInfo($"\nBayer {_guid.ToString()} say:\nI am leaving the stand with {_currentStand.Product.Name}s.");
+                _currentStand = null;
             }
         }
     }

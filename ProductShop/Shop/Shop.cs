@@ -23,11 +23,11 @@ namespace ProductShop
             Product chocolate = new Product("Chocolate", 24);
 
             Stand standWithIceCreams = new Stand(iceCream);
-            standWithIceCreams.WorkCompleted += Stand_WorkCompleted;
+            standWithIceCreams.OnWorkCompleted += Stand_OnWorkCompleted;
             Stand standWithCakes = new Stand(cake);
-            standWithCakes.WorkCompleted += Stand_WorkCompleted;
+            standWithCakes.OnWorkCompleted += Stand_OnWorkCompleted;
             Stand standWithChocolates = new Stand(chocolate);
-            standWithChocolates.WorkCompleted += Stand_WorkCompleted;
+            standWithChocolates.OnWorkCompleted += Stand_OnWorkCompleted;
 
             _stands = new CustomLinkedList<Stand>
             {
@@ -80,14 +80,17 @@ namespace ProductShop
 
         public void Open()
         {
+            ConsoleHelper.WriteInfo("Shop is opening...");
             foreach (var stand in _stands)
             {
                 stand.Open();
             }
+            ConsoleHelper.WriteInfo("Shop is opened. Work is started.");
         }
 
         public void Close()
         {
+            ConsoleHelper.WriteInfo("Shop is closing.");
             while (ActiveVisitorsCount > 0)
             {
                 Thread.Sleep(1000);
@@ -117,28 +120,32 @@ namespace ProductShop
             }
         }
 
-        //change this method
-        private void Stand_WorkCompleted(object sender, EventArgs e)
+        public void ShowStatistic()
+        {
+            foreach (var stand in _stands)
+            {
+                stand.ShowStatistic();
+            }
+        }
+
+        private void Stand_OnWorkCompleted(object sender, EventArgs e)
         {
             Stand stand = sender as Stand;
             if (stand != null)
             {
-                stand.WorkCompleted -= Stand_WorkCompleted;
+                stand.OnWorkCompleted -= Stand_OnWorkCompleted;
 
                 lock (_standsListLocker)
                 {
-                    int selledProductsCount = stand.GetSelledProductsCount();
-
-                    ConsoleHelper.WriteInfo($"The statistic of stand with {stand.Product.Name}s.");
-                    ConsoleHelper.WriteSuccess($"Selled products: {stand.Product.Name}, count: {selledProductsCount}, profit: {selledProductsCount * stand.Product.Price}");
+                    TotalProfit += stand.SelledProductsCount * stand.Product.Price;
+                    stand.ShowStatistic();
 #if DEBUG
                     ConsoleHelper.WriteInfo($"The stand with {stand.Product.Name}s is closed.");
 #endif
-                    TotalProfit += selledProductsCount * stand.Product.Price;
-
                     _stands.Remove(stand);
                     if (_stands.Count == 0)
                     {
+                        ConsoleHelper.WriteInfo("Shop is closed");
                         _workCompleted.Set();
                     }
                 }

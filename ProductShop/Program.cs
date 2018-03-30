@@ -14,8 +14,8 @@ namespace ProductShop
 
         static void Main(string[] args)
         {
-            int X;
-            double Y;
+            int numbersOfBuyers;
+            double generatingDelay;
 
             //init
             _shop = new Shop();
@@ -26,9 +26,9 @@ namespace ProductShop
                 try
                 {
                     ConsoleHelper.WriteTips("Enter numbers of buyers (X):");
-                    X = Convert.ToInt32(Console.ReadLine());
+                    numbersOfBuyers = Convert.ToInt32(Console.ReadLine());
                     ConsoleHelper.WriteTips("Enter delay (Y) (in seconds):");
-                    Y = Convert.ToDouble(Console.ReadLine());
+                    generatingDelay = Convert.ToDouble(Console.ReadLine());
                     break;
                 }
                 catch (FormatException)
@@ -38,21 +38,32 @@ namespace ProductShop
             }
 
             //start
-            ConsoleHelper.WriteTips("Press ENTER to open the shop");
+            ConsoleHelper.WriteTips("Press <ENTER> to open the shop.");
             Console.ReadLine();
 
-            DoWork(X, (int)(Y * 1000));
+            DoWork(numbersOfBuyers, (int)(generatingDelay * 1000));
 
             //stop
-            ConsoleHelper.WriteTips("Pres ENTER to close the shop");
-            Console.ReadLine();
-            _isFinishOfWorkEventWaitHandle.Set();
+            ConsoleHelper.WriteTips("Pres <S> to show the statistic.");
+            ConsoleHelper.WriteTips("Pres <ENTER> to close the shop.");
 
-            ConsoleHelper.WriteTips("Please wait...");
+            while(true)
+            {
+                var consoleKey = Console.ReadKey(true).Key;
+                if (consoleKey == ConsoleKey.S)
+                {
+                    ConsoleHelper.WriteTips("Statistic is loading. Please wait...");
+                    _shop.ShowStatistic();
+                }
+                else if (consoleKey == ConsoleKey.Enter)
+                {
+                    break;
+                }
+            }
+            ConsoleHelper.WriteTips("Shop is closing. Please wait...");
+
+            _isFinishOfWorkEventWaitHandle.Set();
             _shop.WorkCompleted.WaitOne(-1);
-#if DEBUG
-            ConsoleHelper.WriteInfo("Shop is closed");
-#endif
             ConsoleHelper.WriteSuccess($"Visitors: {_shop.VisitorsCount}");
             ConsoleHelper.WriteSuccess($"Total profit: {_shop.TotalProfit}");
         }
@@ -61,10 +72,7 @@ namespace ProductShop
         {
             Thread generateBuyersThread = new Thread(() =>
             {
-                ConsoleHelper.WriteInfo("Shop is opening...");
                 _shop.Open();
-                ConsoleHelper.WriteInfo("Shop is opened. Work is started.");
-
                 do
                 {
 #if DEBUG
@@ -79,10 +87,8 @@ namespace ProductShop
 #endif
                 }
                 while (!_isFinishOfWorkEventWaitHandle.WaitOne(timeout));
-
                 _shop.Close();
             });
-
             generateBuyersThread.Start();
         }
     }

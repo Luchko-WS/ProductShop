@@ -22,12 +22,12 @@ namespace ProductShop
 
             //sellers init
             Random rnd = new Random(DateTime.Now.Millisecond);
-            int sellersCount = rnd.Next(3, 7);
+            int sellersCount = rnd.Next(ProgramConfig.StandConfig.MinNumberOfSellers, ProgramConfig.StandConfig.MaxNumberOfSellers);
 
             for (int i = 0; i < sellersCount; i++)
             {
                 var seller = new Seller(this);
-                seller.WorkCompleted += Seller_WorkCompleted;
+                seller.OnWorkCompleted += Seller_OnWorkCompleted;
                 _sellersCount++;
             }
             ConsoleHelper.WriteInfo($"Sellers created: {sellersCount}");
@@ -47,14 +47,22 @@ namespace ProductShop
             }
         }
 
+        public int SelledProductsCount
+        {
+            get
+            {
+                return _selledProductsCount;
+            }
+        }
+
         public void Open()
         {
-            EventHelper.Invoke(OpenStand, this);
+            EventHelper.Invoke(OnStandOpening, this);
         }
 
         public void Close()
         {
-            EventHelper.Invoke(CloseStand, this);
+            EventHelper.Invoke(OnStandClosing, this);
         }
 
         public int GetBuyersCountInQueue()
@@ -85,14 +93,6 @@ namespace ProductShop
             }
         }
 
-        public int GetSelledProductsCount()
-        {
-            lock (_productCountLocker)
-            {
-                return _selledProductsCount;
-            }
-        }
-
         public void IncreaseProductsCount(int number)
         {
             lock (_productCountLocker)
@@ -101,12 +101,19 @@ namespace ProductShop
             }
         }
 
-        private void Seller_WorkCompleted(object sender, EventArgs e)
+        public void ShowStatistic()
+        {
+            var productCount = _selledProductsCount;
+            ConsoleHelper.WriteSuccess($"The statistic of stand with {_product.Name}s.\n" +
+                $"Selled product: {_product.Name}, count: {productCount}, profit: {productCount * _product.Price}");
+        }
+
+        private void Seller_OnWorkCompleted(object sender, EventArgs e)
         {
             Seller seller = sender as Seller;
             if (seller != null)
             {
-                seller.WorkCompleted -= Seller_WorkCompleted;
+                seller.OnWorkCompleted -= Seller_OnWorkCompleted;
 
                 lock (_sellersCountLocker)
                 {
@@ -116,14 +123,14 @@ namespace ProductShop
 #endif
                     if (_sellersCount == 0)
                     {
-                        EventHelper.Invoke(WorkCompleted, this);
+                        EventHelper.Invoke(OnWorkCompleted, this);
                     }
                 }
             }
         }
 
-        public event EventHandler OpenStand;
-        public event EventHandler CloseStand;
-        public event EventHandler WorkCompleted;
+        public event EventHandler OnStandOpening;
+        public event EventHandler OnStandClosing;
+        public event EventHandler OnWorkCompleted;
     }
 }
